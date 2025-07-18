@@ -18,7 +18,6 @@ add_executable(MoeRender
         include/MFrame.h
         include/component/Component.h
         include/event/Event.h
-        include/event/Handler.h
         include/event/MouseEvent.h
         src/component/Component.cpp
 )
