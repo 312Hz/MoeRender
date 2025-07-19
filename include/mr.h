@@ -9,16 +9,14 @@
 namespace mr
 {
     extern std::unique_ptr<Render> render;
-    extern std::vector<MFrame> frames;
+#ifdef _WIN32
+    extern std::unordered_map<HWND, std::shared_ptr<MFrame>> frames;
+#elif __linux__
+#elif __APPLE__
+#else
+#error "Unsupported platform"
+#endif
 
-    /**
-     * 通过 HWND 获取窗口<br>
-     * 此方式适用于 Windows 平台
-     *
-     * @param hwnd HWND
-     * @return MFrame 对象
-     */
-    extern MFrame getFrameByHWND(HWND hwnd);
 }
 
 #endif
