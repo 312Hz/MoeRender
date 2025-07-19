@@ -4,6 +4,7 @@
 #include "MFrame.h"
 #include "event.h"
 #include "MouseEvent.h"
+#include "MouseHoverEvent.h"
 
 int main() {
     MFrame frame = mr::render->Init("²âÊÔ´úÂë", "me.wangziyang.testwindow");
@@ -13,9 +14,12 @@ int main() {
         std::cout << "Mouse: " << e.getX() << ", " << e.getY() << std::endl;
     });
 
+    frame.registerEvent<MouseHoverEvent>([](MouseHoverEvent& e) {
+        std::cout << "MouseHoverEvent: " << e.getX() << ", " << e.getY() << std::endl;
+    });
+
     MouseEvent event(20, 30);
     frame.callEvent(event);
-    // frame.callEvent(MouseEvent(20, 30));
 
     while (true) {}
 }

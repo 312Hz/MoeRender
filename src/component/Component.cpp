@@ -1,14 +1,15 @@
 #include "Component.h"
 
+#include <iostream>
 #include <typeindex>
 
 void Component::callEvent(Event& event) const
 {
     auto eventType = std::type_index(typeid(event));
 
-    auto it = events.find(eventType);
+    auto it = this->events.find(eventType);
 
-    if (it == events.end())
+    if (it == this->events.end())
         return;
 
     for (const auto& handler : it->second)
