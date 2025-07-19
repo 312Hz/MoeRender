@@ -1,5 +1,6 @@
 #ifndef MOUSEEVENT_H
 #define MOUSEEVENT_H
+
 #include "Event.h"
 
 class MouseEvent: public Event {

@@ -10,6 +10,10 @@
 class Component {
 protected:
     std::map<std::type_index, std::vector<std::function<void(Event&)>>> events;
+
+    // 判断鼠标是否在组件内部
+    // 在未来可能单独封装一个 Status 类记录组件状态
+    bool hover;
 public:
     virtual ~Component() = default;
 
@@ -26,6 +30,11 @@ public:
     }
 
     void callEvent(Event& event) const;
+
+    // 判断鼠标是否在组件内部
+    // 在未来可能单独封装一个 Status 类记录组件状态
+    void setHover(bool is_hover) { this->hover = is_hover; }
+    bool isHover() { return this->hover; }
 };
 
 #endif

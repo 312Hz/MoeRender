@@ -18,13 +18,15 @@ add_executable(MoeRender
         include/MFrame.h
         include/component/Component.h
         include/event/Event.h
-        include/event/MouseEvent.h
+        include/event/mouse/MouseEvent.h
         src/component/Component.cpp
+        include/event/mouse/MouseHoverEvent.h
 )
 
 target_include_directories(MoeRender PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/event>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/event/mouse>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/render>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/component>
 )

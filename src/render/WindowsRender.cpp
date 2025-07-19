@@ -7,15 +7,16 @@
 #include <thread>
 
 #include "mr.h"
+#include "mouse/MouseHoverEvent.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-MFrame WindowsRender::Init(LPCSTR title, LPCSTR className) const
+MFrame WindowsRender::Init(LPCSTR title, LPCSTR className)
 {
     if (HWND console = GetConsoleWindow(); console != nullptr)
         ShowWindow(console, SW_HIDE);
 
-    HWND hwnd = nullptr;
+    HWND hwnd;
     bool ready = false;
     std::mutex mtx;
     std::condition_variable cv;
@@ -44,7 +45,7 @@ MFrame WindowsRender::Init(LPCSTR title, LPCSTR className) const
 
         hwnd = CreateWindowEx(0, className,
             title,
-            WS_OVERLAPPEDWINDOW,
+            WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
             CW_USEDEFAULT, CW_USEDEFAULT,
             800, 600,
             nullptr, nullptr,
@@ -60,7 +61,6 @@ MFrame WindowsRender::Init(LPCSTR title, LPCSTR className) const
             MessageBox(nullptr, "创建窗口失败！", "错误", MB_ICONERROR);
             return;
         }
-
 
         // 1) 静态文本
         CreateWindowExA(
@@ -142,13 +142,20 @@ MFrame WindowsRender::Init(LPCSTR title, LPCSTR className) const
     std::unique_lock lock(mtx);
     cv.wait(lock, [&ready] { return ready; });
 
-    const MFrame frame = frameFuture.get();
-    mr::frames.push_back(frame);
+    MFrame frame = frameFuture.get();
+    mr::frames[hwnd] = std::shared_ptr<MFrame>(&frame);
     return frame;
 }
 
 LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    static bool trackingMouse = false;  // 跟踪状态标志
+
+    auto it = mr::frames.find(hwnd);
+    if (it == mr::frames.end())
+        return DefWindowProc(hwnd, msg, wParam, lParam);
+    MFrame* frame = it->second.get();
+
     switch (msg)
     {
     case WM_CLOSE:
@@ -158,9 +165,38 @@ LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
     case WM_NCDESTROY:
-        mr::getFrameByHWND(hwnd).setClosed(true);
-        std::cout << "窗口完全销毁" << std::endl;
+        mr::frames[hwnd];
+        // std::cout << "窗口完全销毁" << std::endl;
         break;
+    case WM_MOUSEMOVE:
+        {
+            TRACKMOUSEEVENT tme = { sizeof(tme) };
+            tme.dwFlags = TME_HOVER | TME_LEAVE;
+            tme.hwndTrack = hwnd;
+            tme.dwHoverTime = 1;
+
+            TrackMouseEvent(&tme);
+            trackingMouse = true;
+            break;
+        }
+    case WM_MOUSEHOVER:
+        {
+            // 此处存在一定时间的卡顿问题，需要进行具体的优化
+            // 已经确认非 Component::callEvent 方法的问题
+            if (frame->isHover())
+                break;
+
+            frame->setHover(true);
+
+            MouseHoverEvent event(44, 55);
+            frame->callEvent(event);
+            break;
+        }
+    case WM_MOUSELEAVE:
+        {
+            frame->setHover(false);
+            break;
+        }
     default:
         return DefWindowProc(hwnd, msg, wParam, lParam);
     }
