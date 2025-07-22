@@ -7,7 +7,8 @@
 #include <thread>
 
 #include "mr.h"
-#include "mouse/MouseHoverEvent.h"
+#include "MouseHoverEvent.h"
+#include "MouseLeaveEvent.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -195,6 +196,9 @@ LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_MOUSELEAVE:
         {
             frame->setHover(false);
+
+            MouseLeaveEvent event(22, 11);
+            frame->callEvent(event);
             break;
         }
     default:
