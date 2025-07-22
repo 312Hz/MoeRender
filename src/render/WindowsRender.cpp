@@ -9,6 +9,7 @@
 #include "mr.h"
 #include "MouseHoverEvent.h"
 #include "MouseLeaveEvent.h"
+#include "FrameCreateEvent.h"
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -145,6 +146,8 @@ MFrame WindowsRender::Init(LPCSTR title, LPCSTR className)
 
     MFrame frame = frameFuture.get();
     mr::frames[hwnd] = std::shared_ptr<MFrame>(&frame);
+    FrameCreateEvent event;
+    frame.callEvent(event);
     return frame;
 }
 
