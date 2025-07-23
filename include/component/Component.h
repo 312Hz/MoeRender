@@ -17,8 +17,9 @@ protected:
 public:
     virtual ~Component() = default;
 
-    virtual void setTitle(std::string title) const = 0;
-    virtual void setSize(int width, int height) const = 0;
+    virtual void setSize(int width, int height) = 0;
+
+    virtual void setPosition(int x, int y) = 0;
 
     template <typename TEvent>
     void registerEvent(const std::function<void(TEvent&)>& handler) {

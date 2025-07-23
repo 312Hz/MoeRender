@@ -6,6 +6,7 @@
 #include "event.h"
 #include "MouseEvent.h"
 #include "MouseHoverEvent.h"
+#include "TextField.h"
 
 int main() {
     MFrame frame = mr::render->Init("≤‚ ‘¥˙¬Î", "me.wangziyang.testwindow");
@@ -25,6 +26,10 @@ int main() {
 
     MouseEvent event(20, 30);
     frame.callEvent(event);
+
+    TextField textField("Test", 100, 20);
+    textField.setPosition(20, 20);
+    frame.addComponent(&textField);
 
     while (true) {}
 }
