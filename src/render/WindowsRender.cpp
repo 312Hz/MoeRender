@@ -65,15 +65,15 @@ MFrame WindowsRender::Init(LPCSTR title, LPCSTR className)
         }
 
         // 1) 静态文本
-        CreateWindowExA(
-            0, "STATIC", "请输入名字：",
-            WS_CHILD | WS_VISIBLE,
-            20, 20, 100, 20,
-            hwnd,
-            reinterpret_cast<HMENU>(1001),
-            hInstance,
-            nullptr
-        );
+        // CreateWindowExA(
+        //     0, "STATIC", "请输入名字：",
+        //     WS_CHILD | WS_VISIBLE,
+        //     20, 20, 100, 20,
+        //     hwnd,
+        //     reinterpret_cast<HMENU>(1001),
+        //     hInstance,
+        //     nullptr
+        // );
 
         // 2) 单行编辑框
         CreateWindowExA(
@@ -114,12 +114,6 @@ MFrame WindowsRender::Init(LPCSTR title, LPCSTR className)
         si.nMax = 100;
         si.nPos = 0;
         SetScrollInfo(hScroll, SB_CTL, &si, TRUE);
-
-        // —— 控件添加完毕 —— //
-
-        // 显示并刷新窗口
-        ShowWindow(hwnd, SW_SHOWDEFAULT);
-        UpdateWindow(hwnd);
 
         ShowWindow(hwnd, SW_SHOWDEFAULT);
         UpdateWindow(hwnd);

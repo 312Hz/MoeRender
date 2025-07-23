@@ -21,6 +21,7 @@ add_executable(MoeRender
         include/event/mouse/MouseEvent.h
         src/component/Component.cpp
         include/event/mouse/MouseHoverEvent.h
+        include/component/TextField.h
 )
 
 target_include_directories(MoeRender PUBLIC
