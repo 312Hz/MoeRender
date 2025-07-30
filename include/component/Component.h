@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include <typeindex>
-
+#include <Windows.h>
 #include "Event.h"
 
 class Component {
@@ -36,6 +36,16 @@ public:
     // 在未来可能单独封装一个 Status 类记录组件状态
     void setHover(bool is_hover) { this->hover = is_hover; }
     bool isHover() { return this->hover; }
+    // Win32 原生消息分发接口，让子类去 override
+    virtual void handleNativeMessage(UINT msg, WPARAM wParam, LPARAM lParam) {}
+
+    // （可选）如果你也想在基类暴露 ctrlId 的话
+    // virtual void setCtrlId(int) {}
+    // virtual int  getCtrlId() const { return 0; }
+
+    // （可选）也可以把 setNativeHandle 也放到基类
+    virtual void setNativeHandle(HWND) {}
+    virtual HWND getNativeHandle() const { return nullptr; }
 };
 
 #endif
