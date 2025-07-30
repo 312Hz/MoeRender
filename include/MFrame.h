@@ -35,6 +35,9 @@ public:
     bool closed() const;
 
     void addComponent(Component* component);
+    const std::vector<Component*>& getComponents() const {
+        return components;
+    }
 };
 
 #endif
